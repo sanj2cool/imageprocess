@@ -36,7 +36,7 @@
                                 @endif
                             </p>
 
-                            <form method="post" class="py-12" action="{{ route('image.saveimage', $image->id) }}">
+                            <form method="post" class="py-12" action="{{ route('ready.saveimage', $image->id) }}">
                                 @csrf
                                 <div class="form-group">
 

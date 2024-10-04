@@ -170,6 +170,15 @@ class ImageProcessController extends Controller
         return view('single_qa', compact('image'));
     }
 
+    public function showComplete($id)
+    {
+        // Find the image by its ID
+        $image = ImageProcess::findOrFail($id);
+
+        // Pass the image data to the Blade view
+        return view('single_complete', compact('image'));
+    }
+
 
 
 
@@ -222,21 +231,24 @@ class ImageProcessController extends Controller
     $imageProcess = ImageProcess::findOrFail($id);
     
     $currentDate = Carbon::today()->toDateString(); 
-    $currentTimes = now()->toTimeString(); 
     
 
 
 
-
 // Get the current time
-$currentTime = now();
-
+$timenow = getPSTTime();
+$currentTime = Carbon::createFromFormat('H:i:s', $timenow);
+$currentTimes = $currentTime->toTimeString(); 
+    
+//$currentTime = now();
+//dd($currentTime->toTimeString());
 // Get the start time from the request
 $startTime = Carbon::createFromFormat('H:i:s', $request->input('start_time'));
+//$startTime = $request->input('start_time');
 
 // Calculate the total time
 $totalTime = $currentTime->diffInSeconds($startTime);
-
+//dd($totalTime);
 // If you want it in a more readable format (hours, minutes, seconds):
 $hours = floor($totalTime / 3600);
 $minutes = floor(($totalTime % 3600) / 60);
@@ -314,4 +326,40 @@ $totalTimeFormatted = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
     //return view('single_image', compact('image'));
     //return view('your-view-name', compact('image'));
 }
+
+public function updateImagesAll(){
+    // Retrieve all records from the ImageProcess table
+        //$images = ImageProcess::all();
+        $images = ImageProcess::all(); 
+        
+        // Pass the images data to the Blade view
+        return view('update_all', compact('images'));  
+}
+
+public function destroy($id)
+{
+    // Find the image by its ID and delete it
+    $imageProcess = ImageProcess::findOrFail($id);
+    $imageProcess->delete();
+
+    return back()->with('success', 'Image Process deleted successfully!');
+}
+
+public function removeAll(Request $request)
+{
+     //dd($request);
+    $ids = $request->input('ids'); // Get selected IDs
+
+    if (!$ids) {
+        return redirect()->back()->with('error', 'No images selected for deletion.');
+    }
+
+    // Perform the bulk delete operation
+    ImageProcess::whereIn('id', $ids)->delete();
+
+    return redirect()->back()->with('success', 'Selected images have been deleted.');
+}
+
+
+
 }

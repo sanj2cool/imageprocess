@@ -30,7 +30,7 @@
                                             <td>{{ $image->id }}</td>
                                             <td>
                                                 @if ($image->google_img)
-                                                    <a href="/image-list/{{ $image->id }}" target="_blank">
+                                                    <a href="/complete/{{ $image->id }}" target="_blank">
                                                         View Image
                                                     </a>
                                                 @else
