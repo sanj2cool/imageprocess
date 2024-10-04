@@ -184,18 +184,15 @@ class ImageProcessController extends Controller
 
     public function saveimage(Request $request, $id)
 {
+    try {
+    // Find the existing record by ID
+    $imageProcess = ImageProcess::findOrFail($id);
     
-    if($request->image_status== 'qa') {
-        $status='Complete';
-    }else {
-        $status='Ready for QA';
-    }
-    //dd($request);
     // Validate the request data
     $request->validate([
         'input' => 'nullable|string',
         'label_person' => 'nullable|string',
-        'update_date' => 'nullable|date',
+        'update_date' => 'nullable|string',
         'start_time' => 'nullable|string',
         'end_time' => 'nullable|string',
         'total_time' => 'nullable|string',
@@ -225,76 +222,181 @@ class ImageProcessController extends Controller
         'red_eyes' => 'nullable|string',
         'unnatural_skintone' => 'nullable|string',
         'status' => 'nullable|string',
+        'qa_person' => 'nullable|string|max:255',
+        'qa_update_date' => 'nullable|string',
+        'qa_start_time' => 'nullable|string',
+        'qa_end_time' => 'nullable|string',
+        'qa_total_time' => 'nullable|string',
+        'not_humen' => 'nullable|string',
+        'no_face' => 'nullable|string',
+        'not_portrait' => 'nullable|string',
+        'black_white' => 'nullable|string',
+        'unvaried_background' => 'nullable|string',
+        'background_plain' => 'nullable|string',
+        'multiple_people' => 'nullable|string',
+        'image_blank' => 'nullable|string',
     ]);
-
-    // Find the existing record by ID
-    $imageProcess = ImageProcess::findOrFail($id);
-    
-    $currentDate = Carbon::today()->toDateString(); 
-    
-
-
-
-// Get the current time
-$timenow = getPSTTime();
-$currentTime = Carbon::createFromFormat('H:i:s', $timenow);
-$currentTimes = $currentTime->toTimeString(); 
-    
-//$currentTime = now();
-//dd($currentTime->toTimeString());
-// Get the start time from the request
-$startTime = Carbon::createFromFormat('H:i:s', $request->input('start_time'));
-//$startTime = $request->input('start_time');
-
-// Calculate the total time
-$totalTime = $currentTime->diffInSeconds($startTime);
-//dd($totalTime);
-// If you want it in a more readable format (hours, minutes, seconds):
-$hours = floor($totalTime / 3600);
-$minutes = floor(($totalTime % 3600) / 60);
-$seconds = $totalTime % 60;
-
-// You can also format it like this if needed
-$totalTimeFormatted = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
-
-
-    // Update the record with the new data
-    $imageProcess->update([
+   
         
-        'input' => $request->input('input'),
-        'label_person' => $request->input('label_person'),
-        'update_date' => $currentDate,
-        'start_time' => $request->input('start_time'),
-        'end_time' => $currentTimes,
-        'total_time' => $totalTimeFormatted,
-        'ready_qa' => $request->input('ready_qa')? 'Yes' : 'Yes',
-        'blurred' => $request->input('blurred') ? 'Yes' : 'No',
-        'pixelation' => $request->input('pixelation') ? 'Yes' : 'No',
-        'washed_out_images' => $request->input('washed_out_images') ? 'Yes' : 'No',
-        'too_dark' => $request->input('too_dark') ? 'Yes' : 'No',
-        'flash_reflection_on_skin' => $request->input('flash_reflection_on_skin') ? 'Yes' : 'No',
-        'flash_reflection_on_lenses' => $request->input('flash_reflection_on_lenses') ? 'Yes' : 'No',
-        'inkmarked_creased' => $request->input('inkmarked_creased') ? 'Yes' : 'No',
-        'front_view' => $request->input('front_view') ? 'Yes' : 'No',
-        'side_view' => $request->input('side_view') ? 'Yes' : 'No',
-        'varied_background' => $request->input('varied_background') ? 'Yes' : 'No',
-        'photo_of_people' => $request->input('photo_of_people') ? 'Yes' : 'No',
-        'not_photo_of_people' => $request->input('not_photo_of_people') ? 'Yes' : 'No',
-        'dark_glasses' => $request->input('dark_glasses') ? 'Yes' : 'No',
-        'frames_covering_eyes' => $request->input('frames_covering_eyes') ? 'Yes' : 'No',
-        'frames_too_heavy' => $request->input('frames_too_heavy') ? 'Yes' : 'No',
-        'hair_across_eyes' => $request->input('hair_across_eyes') ? 'Yes' : 'No',
-        'wearing_hat_cap' => $request->input('wearing_hat_cap') ? 'Yes' : 'No',
-        'veil_scarf_over_face' => $request->input('veil_scarf_over_face') ? 'Yes' : 'No',
-        'shadow_behind_the_head_portrait' => $request->input('shadow_behind_the_head_portrait') ? 'Yes' : 'No',
-        'eyes_closed' => $request->input('eyes_closed') ? 'Yes' : 'No',
-        'looking_away' => $request->input('looking_away') ? 'Yes' : 'No',
-        'mouth_open' => $request->input('mouth_open') ? 'Yes' : 'No',
-        'red_eyes' => $request->input('red_eyes') ? 'Yes' : 'No',
-        'unnatural_skintone' => $request->input('unnatural_skintone') ? 'Yes' : 'No',
-        'status' => $status,
-    ]);
+        
+    if($request->image_status== 'qa') {
 
+        $QAcurrentDate = Carbon::today()->toDateString(); 
+        $QAtimenow = getPSTTime();
+        $QAcurrentTime = Carbon::createFromFormat('H:i:s', $QAtimenow);
+        $QAcurrentTimes = $QAcurrentTime->toTimeString(); 
+
+        $QAstartTime = Carbon::createFromFormat('H:i:s', $request->input('qa_start_time'));
+        $QAstartTimes =$QAstartTime->toTimeString(); 
+
+        // Calculate the total time
+        $QAtotalTime = $QAcurrentTime->diffInSeconds($QAstartTime);
+        //dd($totalTime);
+        // If you want it in a more readable format (hours, minutes, seconds):
+        $Qhours = floor($QAtotalTime / 3600);
+        $Qminutes = floor(($QAtotalTime % 3600) / 60);
+        $Qseconds = $QAtotalTime % 60;
+
+        // You can also format it like this if needed
+        $QtotalTimeFormatted = sprintf('%02d:%02d:%02d', $Qhours, $Qminutes, $Qseconds);
+
+        $status='Complete';
+
+
+               // Update the record with the new data
+                $imageProcess->update([
+                    'input' => $request->input('input') !== null ? $request->input('input') : $imageProcess->input,
+                    'label_person' => $request->input('label_person') !== null ? $request->input('label_person') : $imageProcess->label_person,
+                    'update_date' => $request->input('update_date') !== null ? $request->input('update_date') : $imageProcess->update_date,
+                    'start_time' => $request->input('start_time') !== null ? $request->input('start_time') : $imageProcess->start_time,
+                    'end_time' => $request->input('end_time') !== null ? $request->input('end_time') : $imageProcess->end_time,
+                    'total_time' => $request->input('total_time') !== null ? $request->input('total_time') : $imageProcess->total_time,
+                    'ready_qa' => $request->input('ready_qa') ? 'Yes' : 'No',
+                    'blurred' => $request->input('blurred') ? 'Yes' : 'No',
+                    'pixelation' => $request->input('pixelation') ? 'Yes' : 'No',
+                    'washed_out_images' => $request->input('washed_out_images') ? 'Yes' : 'No',
+                    'too_dark' => $request->input('too_dark') ? 'Yes' : 'No',
+                    'flash_reflection_on_skin' => $request->input('flash_reflection_on_skin') ? 'Yes' : 'No',
+                    'flash_reflection_on_lenses' => $request->input('flash_reflection_on_lenses') ? 'Yes' : 'No',
+                    'inkmarked_creased' => $request->input('inkmarked_creased') ? 'Yes' : 'No',
+                    'front_view' => $request->input('front_view') ? 'Yes' : 'No',
+                    'side_view' => $request->input('side_view') ? 'Yes' : 'No',
+                    'varied_background' => $request->input('varied_background') ? 'Yes' : 'No',
+                    'photo_of_people' => $request->input('photo_of_people') ? 'Yes' : 'No',
+                    'not_photo_of_people' => $request->input('not_photo_of_people') ? 'Yes' : 'No',
+                    'dark_glasses' => $request->input('dark_glasses') ? 'Yes' : 'No',
+                    'frames_covering_eyes' => $request->input('frames_covering_eyes') ? 'Yes' : 'No',
+                    'frames_too_heavy' => $request->input('frames_too_heavy') ? 'Yes' : 'No',
+                    'hair_across_eyes' => $request->input('hair_across_eyes') ? 'Yes' : 'No',
+                    'wearing_hat_cap' => $request->input('wearing_hat_cap') ? 'Yes' : 'No',
+                    'veil_scarf_over_face' => $request->input('veil_scarf_over_face') ? 'Yes' : 'No',
+                    'shadow_behind_the_head_portrait' => $request->input('shadow_behind_the_head_portrait') ? 'Yes' : 'No',
+                    'eyes_closed' => $request->input('eyes_closed') ? 'Yes' : 'No',
+                    'looking_away' => $request->input('looking_away') ? 'Yes' : 'No',
+                    'mouth_open' => $request->input('mouth_open') ? 'Yes' : 'No',
+                    'red_eyes' => $request->input('red_eyes') ? 'Yes' : 'No',
+                    'unnatural_skintone' => $request->input('unnatural_skintone') ? 'Yes' : 'No',
+                    'status' => $status,
+                    'qa_person' => $request->input('qa_person') !== null ? $request->input('qa_person') : $imageProcess->qa_person,
+                    'qa_update_date' => $QAcurrentDate  !== null ? $QAcurrentDate  : $imageProcess->qa_update_date,
+                    'qa_start_time' => $QAstartTimes,
+                    'qa_end_time' => $QAcurrentTimes !== null ? $QAcurrentTimes : $imageProcess->qa_end_time,
+                    'qa_total_time' => $QtotalTimeFormatted !== null ? $QtotalTimeFormatted : $imageProcess->qa_total_time,
+                    'not_humen' => $request->input('not_humen') ? 'Yes' : 'No',
+                    'no_face' => $request->input('no_face') ? 'Yes' : 'No',
+                    'not_portrait' => $request->input('not_portrait') ? 'Yes' : 'No',
+                    'black_white' => $request->input('black_white') ? 'Yes' : 'No',
+                    'unvaried_background' => $request->input('unvaried_background') ? 'Yes' : 'No',
+                    'background_plain' => $request->input('background_plain') ? 'Yes' : 'No',
+                    'multiple_people' => $request->input('multiple_people') ? 'Yes' : 'No',
+                    'image_blank' => $request->input('image_blank') ? 'Yes' : 'No',
+                ]);
+
+        
+    }else {
+
+        $currentDate = Carbon::today()->toDateString(); 
+    
+ // Get the current time
+        $timenow = getPSTTime();
+        $currentTime = Carbon::createFromFormat('H:i:s', $timenow);
+        $currentTimes = $currentTime->toTimeString(); 
+          
+        // Get the start time from the request
+        $startTime = Carbon::createFromFormat('H:i:s', $request->input('start_time'));
+        $startTimes = $startTime->toTimeString();
+       
+        // Calculate the total time
+        $totalTime = $currentTime->diffInSeconds($startTime);
+        //dd($totalTime);
+        // If you want it in a more readable format (hours, minutes, seconds):
+        $hours = floor($totalTime / 3600);
+        $minutes = floor(($totalTime % 3600) / 60);
+        $seconds = $totalTime % 60;
+
+        // You can also format it like this if needed
+        $totalTimeFormatted = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+        
+        $status='Ready for QA';
+
+        $imageProcess->update([
+        
+            'input' => $request->input('input') !== null ? $request->input('input') : $imageProcess->input,
+            'label_person' => $request->input('label_person'),
+            'update_date' => $currentDate,
+            'start_time' => $request->input('start_time'),
+            'end_time' => $currentTimes,
+            'total_time' => $totalTimeFormatted,
+            'ready_qa' => $request->input('ready_qa')? 'Yes' : 'Yes',
+            'blurred' => $request->input('blurred') ? 'Yes' : 'No',
+            'pixelation' => $request->input('pixelation') ? 'Yes' : 'No',
+            'washed_out_images' => $request->input('washed_out_images') ? 'Yes' : 'No',
+            'too_dark' => $request->input('too_dark') ? 'Yes' : 'No',
+            'flash_reflection_on_skin' => $request->input('flash_reflection_on_skin') ? 'Yes' : 'No',
+            'flash_reflection_on_lenses' => $request->input('flash_reflection_on_lenses') ? 'Yes' : 'No',
+            'inkmarked_creased' => $request->input('inkmarked_creased') ? 'Yes' : 'No',
+            'front_view' => $request->input('front_view') ? 'Yes' : 'No',
+            'side_view' => $request->input('side_view') ? 'Yes' : 'No',
+            'varied_background' => $request->input('varied_background') ? 'Yes' : 'No',
+            'photo_of_people' => $request->input('photo_of_people') ? 'Yes' : 'No',
+            'not_photo_of_people' => $request->input('not_photo_of_people') ? 'Yes' : 'No',
+            'dark_glasses' => $request->input('dark_glasses') ? 'Yes' : 'No',
+            'frames_covering_eyes' => $request->input('frames_covering_eyes') ? 'Yes' : 'No',
+            'frames_too_heavy' => $request->input('frames_too_heavy') ? 'Yes' : 'No',
+            'hair_across_eyes' => $request->input('hair_across_eyes') ? 'Yes' : 'No',
+            'wearing_hat_cap' => $request->input('wearing_hat_cap') ? 'Yes' : 'No',
+            'veil_scarf_over_face' => $request->input('veil_scarf_over_face') ? 'Yes' : 'No',
+            'shadow_behind_the_head_portrait' => $request->input('shadow_behind_the_head_portrait') ? 'Yes' : 'No',
+            'eyes_closed' => $request->input('eyes_closed') ? 'Yes' : 'No',
+            'looking_away' => $request->input('looking_away') ? 'Yes' : 'No',
+            'mouth_open' => $request->input('mouth_open') ? 'Yes' : 'No',
+            'red_eyes' => $request->input('red_eyes') ? 'Yes' : 'No',
+            'unnatural_skintone' => $request->input('unnatural_skintone') ? 'Yes' : 'No',
+            'status' => $status,
+            'qa_person' => $request->input('qa_person') !== null ? $request->input('qa_person') : $imageProcess->qa_person,
+            'qa_update_date' => $request->input('qa_update_date') !== null ? $request->input('qa_update_date') : $imageProcess->qa_update_date,
+            'qa_start_time' => $request->input('qa_start_time') !== null ? $request->input('qa_start_time') : $imageProcess->qa_start_time,
+            'qa_end_time' => $request->input('qa_end_time') !== null ? $request->input('qa_end_time') : $imageProcess->qa_end_time,
+            'qa_total_time' => $request->input('qa_total_time') !== null ? $request->input('qa_total_time') : $imageProcess->qa_total_time,
+            'not_humen' => $request->input('not_humen') ? 'Yes' : 'No',
+            'no_face' => $request->input('no_face') ? 'Yes' : 'No',
+            'not_portrait' => $request->input('not_portrait') ? 'Yes' : 'No',
+            'black_white' => $request->input('black_white') ? 'Yes' : 'No',
+            'unvaried_background' => $request->input('unvaried_background') ? 'Yes' : 'No',
+            'background_plain' => $request->input('background_plain') ? 'Yes' : 'No',
+            'multiple_people' => $request->input('multiple_people') ? 'Yes' : 'No',
+            'image_blank' => $request->input('image_blank') ? 'Yes' : 'No',
+        ]);
+       
+
+
+
+    }
+
+    
+ 
+    
+   
     if ($request->input('action') === 'save_and_next' && $request->image_status== 'qa') { 
         $QaNextId = ImageProcess::where('status', 'Ready for QA')->first()->id ?? null;
       return redirect()->route('image.showQa', ['id' => $QaNextId])->with('success', 'Image Process updated successfully!');
@@ -310,21 +412,12 @@ $totalTimeFormatted = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
         return redirect()->route('image.list')->with('success', 'Image Process updated successfully!');
 
     }
-
+} catch (\Exception $e) {
+    Log::error($e); // Log the error
+    return response()->json(['error' => 'An error occurred while processing your request.'], 500);
+}
    
-    if ($request->isMethod('post')) {
-        // Dump the form data
-       // dd($request->all());
-
-        // You can also handle your form data here if needed
-    }
-
-    // Load the image if necessary
-    //$image = ImageProcess::findOrFail($id); // Assuming you have an ImageProcess model
-
-    // Return the view with the image
-    //return view('single_image', compact('image'));
-    //return view('your-view-name', compact('image'));
+    
 }
 
 public function updateImagesAll(){

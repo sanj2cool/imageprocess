@@ -45,5 +45,18 @@ class ImageProcess extends Model
         'red_eyes',
         'unnatural_skintone',
         'status',
+        'qa_person',
+        'qa_update_date',
+        'qa_start_time',
+        'qa_end_time',
+        'qa_total_time',
+        'not_humen',
+        'no_face',
+        'not_portrait',
+        'black_white',
+        'unvaried_background',
+        'background_plain',
+        'multiple_people',
+        'image_blank',
     ];
 }

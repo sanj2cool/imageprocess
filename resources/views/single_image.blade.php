@@ -46,7 +46,7 @@
                                                 <br>
                                                 <small>i.e., cartoon, painting, animated images, empty image, non-human subject
                                                 </small> <br>
-                                                <input type="checkbox" id="xb"  name="no-face" value="no-face" class="mr-2"> Does not contain a face (xb)
+                                                <input type="checkbox" id="xb"  name="no_face" value="no-face" class="mr-2"> Does not contain a face (xb)
                                                 <br>
                                             </div>
                                         </div>
@@ -74,6 +74,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="flex justify-between  flex-row">
                                         <div class="min-w-60">
                                             <div class="p-4 border rounded-lg shadow">
