@@ -98,8 +98,7 @@
                                                     <input type="checkbox" id="ta"  name="front_view" value="front_view" class="mr-2"> Front View <b class="font-bold">(ta)</b><br>
                                                     <input type="checkbox" id="tb" name="side_view" value="side_view" class="mr-2"> Side View <b class="font-bold">(tb)</b><br>
                                                     <input type="checkbox" id="tc" name="varied_background" value="varied_background" class="mr-2"> Varied Background <b class="font-bold">(tc)</b><br>
-                                                    <input type="checkbox" id="td" name="photo_of_people" value="photo_of_people" class="mr-2"> Photo of people <b class="font-bold">(td)</b><br>
-                                                    <input type="checkbox" id="te" name="not_photo_of_people" value="not_photo_of_people" class="mr-2"> Not photo of people <b class="font-bold">(te)</b><br>
+                                                    
                                                 </div>
                                             </div>
                                         </div>

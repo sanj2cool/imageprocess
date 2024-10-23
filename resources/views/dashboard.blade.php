@@ -15,7 +15,14 @@
                     <div class="w-3/4">
                         <div class="content container mt-5">
                             <h2 class="mb-4">Image List</h2>
-
+                            <form method="GET" action="{{ route('dashboard') }}" class="mb-4">
+                                <select name="status" onchange="this.form.submit()" class="border border-gray-300 rounded p-2">
+                                    <option value="">-- Select Status --</option>
+                                    <option value="Ready for QA" {{ request('status') == 'Ready for QA' ? 'selected' : '' }}>Ready for QA</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="complete" {{ request('status') == 'complete' ? 'selected' : '' }}>Complete</option>
+                                    <!-- Add more status options as needed -->
+                                </select>
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>

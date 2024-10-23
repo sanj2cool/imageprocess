@@ -126,15 +126,23 @@ class ImageProcessController extends Controller
     }
 
 
-    public function dash()
-    {
-        // Retrieve all records from the ImageProcess table
-        //$images = ImageProcess::all();
-        $images = ImageProcess::all(); 
-        
-        // Pass the images data to the Blade view
-        return view('dashboard', compact('images'));
+    public function dash(Request $request)
+{
+    // Start a query for the ImageProcess model
+    $query = ImageProcess::query();
+
+    // Check if the 'status' parameter is present in the request
+    if ($request->has('status') && $request->status !== '') {
+        // Filter by the status value if it's provided
+        $query->where('status', $request->status);
     }
+
+    // Retrieve the filtered or all records
+    $images = $query->get();
+
+    // Pass the images data to the Blade view
+    return view('dashboard', compact('images'));
+}
     public function imageListQcReady()
     {
         // Retrieve all records from the ImageProcess table
@@ -207,8 +215,6 @@ class ImageProcessController extends Controller
         'front_view' => 'nullable|string',
         'side_view' => 'nullable|string',
         'varied_background' => 'nullable|string',
-        'photo_of_people' => 'nullable|string',
-        'not_photo_of_people' => 'nullable|string',
         'dark_glasses' => 'nullable|string',
         'frames_covering_eyes' => 'nullable|string',
         'frames_too_heavy' => 'nullable|string',

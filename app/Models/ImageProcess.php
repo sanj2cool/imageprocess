@@ -30,8 +30,6 @@ class ImageProcess extends Model
         'front_view',
         'side_view',
         'varied_background',
-        'photo_of_people',
-        'not_photo_of_people',
         'dark_glasses',
         'frames_covering_eyes',
         'frames_too_heavy',

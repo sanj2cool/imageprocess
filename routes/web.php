@@ -14,11 +14,14 @@ use App\Http\Controllers\ImageProcessController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+/*
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
-
+*/
+Route::get('/', [ImageProcessController::class, 'dash'])
+    ->middleware(['auth', 'verified']) // Apply auth and email verification middleware
+    ->name('dashboard');
 
 Route::get('/dashboard', [ImageProcessController::class, 'dash'])
     ->middleware(['auth', 'verified']) // Apply auth and email verification middleware
